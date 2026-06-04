@@ -1,24 +1,31 @@
-import { describe, it, expect } from "vitest";
-import {
-  buildSessionCookie,
-  normalizeSessionId,
-  fetchStoryViaSession,
-} from "../../src/network/instagram-api.js";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import * as instagramApi from "../../src/network/instagram-api.js";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("instagram-api", () => {
   it("decodes URL-encoded sessionid", () => {
-    expect(normalizeSessionId("foo%3Abar%3Abaz")).toBe("foo:bar:baz");
+    expect(instagramApi.normalizeSessionId("foo%3Abar%3Abaz")).toBe("foo:bar:baz");
   });
 
   it("builds session cookie from sessionId", () => {
-    expect(buildSessionCookie("abc123")).toBe("sessionid=abc123");
-    expect(buildSessionCookie(undefined, "sessionid=x; csrftoken=y")).toBe(
+    expect(instagramApi.buildSessionCookie("abc123")).toBe("sessionid=abc123");
+    expect(instagramApi.buildSessionCookie(undefined, "sessionid=x; csrftoken=y")).toBe(
       "sessionid=x; csrftoken=y"
     );
   });
 
-  it("returns null without network session", async () => {
-    const result = await fetchStoryViaSession(
+  it("returns null when story API paths yield nothing (no live network)", async () => {
+    vi.spyOn(instagramApi, "fetchMediaInfoByPk").mockResolvedValue(null);
+    vi.spyOn(instagramApi, "fetchStoryPageWithSession").mockResolvedValue({
+      statusCode: 404,
+      body: "",
+    });
+    vi.spyOn(instagramApi, "fetchUserId").mockResolvedValue(null);
+
+    const result = await instagramApi.fetchStoryViaSession(
       {
         type: "story",
         username: "nobody",
