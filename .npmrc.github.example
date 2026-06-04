@@ -1,0 +1,5 @@
+# Copy to .npmrc (project root or ~/.npmrc) to install from GitHub Packages.
+# Create a PAT: https://github.com/settings/tokens — scope: read:packages
+
+@wh173-5p1d3r:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN

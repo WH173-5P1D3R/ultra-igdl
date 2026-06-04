@@ -51,9 +51,37 @@ Fetch direct CDN URLs for reels, posts, carousels, stories, and highlights. Buil
 
 ## Installation
 
+### npm (recommended)
+
 ```bash
 npm install ultra-igdl
 ```
+
+[![npm version](https://img.shields.io/npm/v/ultra-igdl.svg)](https://www.npmjs.com/package/ultra-igdl)
+
+### GitHub Packages
+
+Scoped package: `@wh173-5p1d3r/ultra-igdl` (published on release tags `v*`).
+
+1. Create a [GitHub PAT](https://github.com/settings/tokens) with `read:packages`.
+2. Add `.npmrc` (see [`.npmrc.github.example`](./.npmrc.github.example)):
+
+```ini
+@wh173-5p1d3r:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+```
+
+3. Install:
+
+```bash
+npm install @wh173-5p1d3r/ultra-igdl
+```
+
+```js
+import { ultraigdl } from "@wh173-5p1d3r/ultra-igdl";
+```
+
+Package page: https://github.com/WH173-5P1D3R/ultra-igdl/packages
 
 CLI only (no install into project):
 
