@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta property="og:video" content="https://cdninstagram.com/test/reel.mp4" />
+<meta property="og:image" content="https://cdninstagram.com/test/thumb.jpg" />
+</head>
+<body>
+<script type="application/ld+json">
+{
+  "@type": "VideoObject",
+  "contentUrl": "https://cdninstagram.com/test/reel-ld.mp4",
+  "thumbnailUrl": "https://cdninstagram.com/test/thumb-ld.jpg",
+  "width": 1080,
+  "height": 1920,
+  "duration": "PT25S"
+}
+</script>
+<script>
+window.__additionalDataLoaded('extra', {
+  "items": [{
+    "code": "REEL123",
+    "user": { "username": "reeluser" },
+    "caption": { "text": "Reel caption" },
+    "video_versions": [
+      {"url": "https://cdninstagram.com/test/reel-480.mp4", "width": 480, "height": 854},
+      {"url": "https://cdninstagram.com/test/reel-1080.mp4", "width": 1080, "height": 1920}
+    ],
+    "video_duration": 25,
+    "image_versions2": {
+      "candidates": [
+        {"url": "https://cdninstagram.com/test/thumb-150.jpg", "width": 150, "height": 150},
+        {"url": "https://cdninstagram.com/test/thumb-1080.jpg", "width": 1080, "height": 1920}
+      ]
+    }
+  }]
+});
+</script>
+</body>
+</html>

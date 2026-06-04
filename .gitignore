@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.env
+.env.*
+downloads/
+*.tgz
+.npm-cache/
+
+# Local Instagram HTML/debug captures (use ultra-igdl-live-test for live runs)
+scripts/*
+!scripts/sync-version.mjs

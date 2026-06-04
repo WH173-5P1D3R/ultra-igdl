@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta property="og:image" content="https://cdninstagram.com/test/image.jpg" />
+<meta property="og:description" content="Test caption" />
+<meta property="og:title" content="User (@testuser)" />
+<script type="application/ld+json">
+{
+  "@type": "ImageObject",
+  "author": { "identifier": "@testuser", "name": "testuser" },
+  "description": "JSON-LD caption",
+  "contentUrl": "https://cdninstagram.com/test/ld-image.jpg",
+  "width": 1080,
+  "height": 1080
+}
+</script>
+</head>
+<body>
+<script>
+window._sharedData = {
+  "entry_data": {
+    "PostPage": [{
+      "graphql": {
+        "shortcode_media": {
+          "shortcode": "ABC123",
+          "display_url": "https://cdninstagram.com/test/display.jpg",
+          "display_resources": [
+            {"src": "https://cdninstagram.com/test/s640.jpg", "config_width": 640, "config_height": 640},
+            {"src": "https://cdninstagram.com/test/s1080.jpg", "config_width": 1080, "config_height": 1080}
+          ],
+          "owner": { "username": "testuser" },
+          "edge_media_to_caption": {
+            "edges": [{ "node": { "text": "Shared data caption" } }]
+          }
+        }
+      }
+    }]
+  }
+};
+</script>
+</body>
+</html>
