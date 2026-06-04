@@ -216,7 +216,7 @@ if (result.code !== 200) {
   "code": 200,
   "meta": {
     "extractor": "ultra-igdl",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "username": "creator",
   "caption": "Post caption as one clean line",
