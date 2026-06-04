@@ -271,7 +271,7 @@ if (result.code !== 200) {
 {
   "code": 404,
   "message": "Media not found",
-  "meta": { "extractor": "ultra-igdl", "version": "1.0.1" }
+  "meta": { "extractor": "ultra-igdl", "version": "1.0.2" }
 }
 ```
 
