@@ -1,0 +1,17 @@
+# Source & tests (publish only dist/ per package.json "files")
+src/
+tests/
+examples/
+scripts/
+.github/
+coverage/
+node_modules/
+*.log
+.env
+.env.*
+downloads/
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+vitest.stress.config.ts
+*.tgz
