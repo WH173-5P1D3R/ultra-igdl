@@ -114,7 +114,8 @@ describe("integration: ultraigdl", () => {
     const ig = new ultraigdl();
     const health = await ig.health();
     expect(health.status).toBe("ok");
-    expect(health.version).toBe("1.0.0");
+    const { PACKAGE_VERSION } = await import("../../src/version.js");
+    expect(health.version).toBe(PACKAGE_VERSION);
   });
 
   it("media returns only media array", async () => {

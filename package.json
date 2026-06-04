@@ -1,6 +1,6 @@
 {
   "name": "ultra-igdl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Production-grade Instagram media extractor for Node.js 20+ — reels, posts, carousels, stories, highlights. Multi-layer parsing, session API, CLI, ESM+CJS.",
   "type": "module",
   "main": "./dist/index.cjs",
