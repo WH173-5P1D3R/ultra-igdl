@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ultraigdl } from "../../src/index.js";
 import * as clientModule from "../../src/network/client.js";
+import * as requestModule from "../../src/network/request.js";
 
 const postHtml = () =>
   readFile(join(process.cwd(), "tests/fixtures/sample-post.html"), "utf-8");
@@ -116,6 +117,63 @@ describe("integration: ultraigdl", () => {
     expect(health.status).toBe("ok");
     const { PACKAGE_VERSION } = await import("../../src/version.js");
     expect(health.version).toBe(PACKAGE_VERSION);
+  });
+
+  it("downloads reel video via session media/info API", async () => {
+    const thumbOnlyHtml = `<html><head>
+<meta property="og:image" content="https://cdninstagram.com/test/thumb.jpg" />
+</head><body></body></html>`;
+
+    vi.spyOn(clientModule.HttpClient.prototype, "fetchWithCookie").mockResolvedValue({
+      body: thumbOnlyHtml,
+      statusCode: 200,
+      headers: {},
+    });
+
+    const apiBody = JSON.stringify({
+      items: [
+        {
+          user: { username: "reeluser" },
+          caption: { text: "Test reel" },
+          media_type: 2,
+          is_video: true,
+          video_versions: [
+            {
+              url: "https://cdninstagram.com/test/reel-1080.mp4",
+              width: 1080,
+              height: 1920,
+            },
+          ],
+          video_duration: 12,
+        },
+      ],
+    });
+
+    vi.spyOn(requestModule, "request").mockImplementation(async (url: string | URL) => {
+      if (String(url).includes("/api/v1/media/")) {
+        return {
+          statusCode: 200,
+          headers: {},
+          body: { text: async () => apiBody },
+        } as never;
+      }
+      return {
+        statusCode: 404,
+        headers: {},
+        body: { text: async () => "" },
+      } as never;
+    });
+
+    const ig = new ultraigdl({
+      cache: false,
+      cookies: "sessionid=test_session; csrftoken=test_csrf; ds_user_id=12345",
+    });
+    const result = await ig.download("https://www.instagram.com/reel/DZAR5xAN_br/");
+    expect(result.code).toBe(200);
+    if (result.code === 200) {
+      expect(result.media.some((m) => m.type === "video")).toBe(true);
+      expect(result.username).toBe("reeluser");
+    }
   });
 
   it("media returns only media array", async () => {

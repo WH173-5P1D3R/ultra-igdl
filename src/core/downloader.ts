@@ -423,7 +423,13 @@ export class DownloaderCore {
           }
         }
         prefetchApiData = fromApi;
-      } else if (sessionCookie && parsed.type === "post" && parsed.shortcode) {
+      } else if (
+        sessionCookie &&
+        (parsed.type === "post" ||
+          parsed.type === "reel" ||
+          parsed.type === "tv") &&
+        parsed.shortcode
+      ) {
         sessionCookie = await ensureSession(sessionCookie);
         const mediaPk = shortcodeToMediaPk(parsed.shortcode);
         const ownerId = userIdFromCookie(sessionCookie) ?? undefined;
@@ -436,6 +442,27 @@ export class DownloaderCore {
           prefetchApiData = fromApi;
           body = pageRes.body;
           statusCode = pageRes.statusCode;
+
+          if (parsed.type === "reel" || parsed.type === "tv") {
+            const apiMedia = filterValidMedia(fromApi?.media ?? []);
+            if (hasReelVideo(apiMedia)) {
+              const pageMeta = extractPageMeta(body);
+              const extracted = normalizeExtraction(
+                {
+                  ...fromApi!,
+                  media: apiMedia,
+                  caption: fromApi!.caption ?? "",
+                  username: fromApi!.username || "",
+                },
+                parsed,
+                { ...pageMeta, html: body },
+                body
+              );
+              if (extracted?.media.length) {
+                return this.success(extracted);
+              }
+            }
+          }
         } else {
           const pageRes = await pagePromise;
           body = pageRes.body;
@@ -493,6 +520,24 @@ export class DownloaderCore {
         const apiMedia = filterValidMedia(prefetchApiData.media);
         const htmlCount = filterValidMedia(extracted?.media ?? []).length;
         if (apiMedia.length >= 2 || apiMedia.length > htmlCount) {
+          extracted = {
+            ...(extracted ?? { media: [], caption: "", username: "" }),
+            ...prefetchApiData,
+            media: apiMedia,
+            caption: prefetchApiData.caption || extracted?.caption || "",
+            username: prefetchApiData.username || extracted?.username || "",
+            engagement: prefetchApiData.engagement ?? extracted?.engagement,
+          };
+        }
+      }
+
+      if (
+        (parsed.type === "reel" || parsed.type === "tv") &&
+        prefetchApiData &&
+        !hasReelVideo(filterValidMedia(extracted?.media ?? []))
+      ) {
+        const apiMedia = filterValidMedia(prefetchApiData.media);
+        if (hasReelVideo(apiMedia)) {
           extracted = {
             ...(extracted ?? { media: [], caption: "", username: "" }),
             ...prefetchApiData,
@@ -598,13 +643,17 @@ export class DownloaderCore {
         sessionCookie &&
         !hasReelVideo(extracted?.media ?? [])
       ) {
-        const mediaPk = extractMediaPkFromHtml(dimensionHtmlPre);
+        sessionCookie = await ensureSession(sessionCookie);
+        const mediaPk =
+          (parsed.shortcode ? shortcodeToMediaPk(parsed.shortcode) : null) ??
+          extractMediaPkFromHtml(dimensionHtmlPre);
         if (mediaPk) {
           logger.debug(`Reel API fallback for media pk=${mediaPk}`);
           const fromApi = await fetchMediaInfoByPk(
             mediaPk,
             sessionCookie,
-            parsed.normalized
+            parsed.normalized,
+            userIdFromCookie(sessionCookie) ?? undefined
           );
           extracted = mergeExtracted(extracted, fromApi);
         }
