@@ -1,15 +1,14 @@
+# Sync GitHub About topics from .github/topics.txt
+# GITHUB_TOKEN cannot update topics — add repo secret REPO_TOPICS_TOKEN (PAT with repo scope),
+# then run this workflow manually: Actions → Sync repository topics → Run workflow
+
 name: Sync repository topics
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/repo-topics.yml
-      - .github/topics.txt
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   topics:
@@ -19,8 +18,13 @@ jobs:
 
       - name: Apply topics from .github/topics.txt
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_TOPICS_TOKEN }}
         run: |
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::warning::REPO_TOPICS_TOKEN secret is not set — cannot sync GitHub topics via API."
+            echo "Add topic ultra-igdl manually: repo → About (gear icon) → Topics"
+            exit 0
+          fi
           topics=$(grep -v '^\s*#' .github/topics.txt | grep -v '^\s*$' | jq -R -s -c 'split("\n") | map(select(length > 0))')
           curl -fsSL -X PUT \
             -H "Accept: application/vnd.github+json" \
