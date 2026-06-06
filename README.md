@@ -4,6 +4,8 @@
 
 Get direct download links (images and videos) from Instagram posts, reels, carousels, stories, and highlights. Use it from the **command line** or inside your **JavaScript / TypeScript** app.
 
+[![total views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/WH173-5P1D3R/ultra-igdl&title=total%20views)](https://github.com/WH173-5P1D3R/ultra-igdl)
+[![total downloads](https://img.shields.io/npm/dt/ultra-igdl?label=total%20downloads)](https://www.npmjs.com/package/ultra-igdl)
 [![npm version](https://img.shields.io/npm/v/ultra-igdl.svg)](https://www.npmjs.com/package/ultra-igdl)
 
 **Links:** [npm package](https://www.npmjs.com/package/ultra-igdl) · [GitHub](https://github.com/WH173-5P1D3R/ultra-igdl) · [Telegram bot](https://t.me/igdlw5_bot) · [Web downloader](https://w5-insta-downloader.vercel.app) · [Report issues](https://github.com/WH173-5P1D3R/ultra-igdl/issues)
