@@ -6,7 +6,7 @@ Get direct download links (images and videos) from Instagram posts, reels, carou
 
 [![npm version](https://img.shields.io/npm/v/ultra-igdl.svg)](https://www.npmjs.com/package/ultra-igdl)
 
-**Links:** [npm package](https://www.npmjs.com/package/ultra-igdl) · [GitHub](https://github.com/WH173-5P1D3R/ultra-igdl) · [Report issues](https://github.com/WH173-5P1D3R/ultra-igdl/issues)
+**Links:** [npm package](https://www.npmjs.com/package/ultra-igdl) · [GitHub](https://github.com/WH173-5P1D3R/ultra-igdl) · [Telegram bot](https://t.me/igdlw5_bot) · [Web downloader](https://w5-insta-downloader.vercel.app) · [Report issues](https://github.com/WH173-5P1D3R/ultra-igdl/issues)
 
 ---
 
@@ -27,9 +27,10 @@ Get direct download links (images and videos) from Instagram posts, reels, carou
 13. [Batch URLs and bots](#13-batch-urls-and-bots)
 14. [Error codes and fixes](#14-error-codes-and-fixes)
 15. [FAQ and troubleshooting](#15-faq-and-troubleshooting)
-16. [Examples in this repository](#16-examples-in-this-repository)
-17. [Legal and privacy](#17-legal-and-privacy)
-18. [License](#18-license)
+16. [Example projects (live)](#16-example-projects-live)
+17. [Examples in this repository](#17-examples-in-this-repository)
+18. [Legal and privacy](#18-legal-and-privacy)
+19. [License](#19-license)
 
 ---
 
@@ -54,6 +55,7 @@ It works **without logging in** for many public posts and reels, but Instagram l
 | **JavaScript developer** | [Section 6](#6-your-first-download-code) → [Section 11](#11-javascript--typescript-api) |
 | **Bot builder** (Telegram, Discord, etc.) | [Section 8](#8-instagram-session--why-and-how) + [Section 13](#13-batch-urls-and-bots) |
 | **TypeScript user** | [Section 11](#11-javascript--typescript-api) (types included) |
+| **Want to try a live demo** | [Section 16](#16-example-projects-live) — Telegram bot and web downloader |
 
 No Instagram API key is required. You only need Node.js and a valid Instagram URL.
 
@@ -686,7 +688,22 @@ A: No. It uses the same kind of page parsing and optional session API as a logge
 
 ---
 
-## 16. Examples in this repository
+## 16. Example projects (live)
+
+Real apps built with **ultra-igdl**. Try them before you integrate the library yourself.
+
+| Project | Link | Description |
+|---------|------|-------------|
+| **Telegram bot** | [t.me/igdlw5_bot](https://t.me/igdlw5_bot) | Send an Instagram URL in Telegram and get media back |
+| **Web downloader** | [w5-insta-downloader.vercel.app](https://w5-insta-downloader.vercel.app) | Paste a link in the browser and download posts, reels, and carousels |
+
+These projects use the same extraction flow described in this README: URL in → direct CDN media out, with session cookies on the server for full reels and carousels.
+
+Starter code for similar apps lives in [`examples/telegram-bot.ts`](./examples/telegram-bot.ts), [`examples/express-api.ts`](./examples/express-api.ts), and [`examples/fastify-api.ts`](./examples/fastify-api.ts).
+
+---
+
+## 17. Examples in this repository
 
 After cloning, build once: `npm run build`.
 
@@ -709,7 +726,7 @@ node examples/basic.mjs "https://www.instagram.com/p/SHORTCODE/"
 
 ---
 
-## 17. Legal and privacy
+## 18. Legal and privacy
 
 - **Not affiliated** with Instagram or Meta.
 - You must follow **Instagram’s Terms of Use** and your local laws. Only download content you are allowed to use.
@@ -718,7 +735,7 @@ node examples/basic.mjs "https://www.instagram.com/p/SHORTCODE/"
 
 ---
 
-## 18. License
+## 19. License
 
 [MIT](./LICENSE) — free to use with attribution.
 
