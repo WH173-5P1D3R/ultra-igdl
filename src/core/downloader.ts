@@ -43,6 +43,7 @@ import {
   enrichSessionCookie,
   fetchStoryViaSession,
   fetchMediaInfoByPk,
+  isSessionApiRejected,
   userIdFromCookie,
   sessionCookieReady,
 } from "../network/instagram-api.js";
@@ -354,6 +355,7 @@ export class DownloaderCore {
         this.options.sessionId,
         this.options.cookies
       );
+      let sessionRejected = false;
       const sessionTypes = parsed.type === "story" || parsed.type === "highlight";
       const embedUrl = resolveEmbedUrl(parsed);
       let prefetchApiData: ExtractedPostData | null = null;
@@ -366,6 +368,19 @@ export class DownloaderCore {
         if (sessionCookieReady(cookie)) return cookie;
         return enrichSessionCookie(cookie);
       };
+
+      if (sessionCookie) {
+        sessionCookie = await ensureSession(sessionCookie);
+        const probePk =
+          (parsed.shortcode ? shortcodeToMediaPk(parsed.shortcode) : null) ??
+          parsed.storyId ??
+          null;
+        if (probePk && (await isSessionApiRejected(sessionCookie, parsed.normalized, probePk))) {
+          logger.debug("Instagram session cookie rejected — continuing logged out");
+          sessionRejected = true;
+          sessionCookie = undefined;
+        }
+      }
 
       // API-first: one round-trip when media/info succeeds (skips heavy page HTML).
       if (sessionCookie && parsed.type === "story" && parsed.storyId) {
@@ -757,9 +772,11 @@ export class DownloaderCore {
               ? "Story not found or expired (check sessionId and that the story is still active)"
               : "Story media requires sessionId — Instagram does not expose story CDN URLs to logged-out requests. Pass options.sessionId from a logged-in browser cookie."
             : parsed.type === "reel" || parsed.type === "tv"
-              ? sessionCookie
-                ? "Reel video not found — reel may be unavailable or session expired"
-                : "Reel video requires INSTAGRAM_SESSION_ID or INSTAGRAM_COOKIES — Instagram no longer exposes reel MP4 URLs in public HTML"
+              ? sessionRejected
+                ? "Reel video not found — your Instagram session cookie is expired or invalid. Copy fresh sessionid, csrftoken, and ds_user_id from a logged-in browser."
+                : sessionCookie
+                  ? "Reel video not found — reel may be unavailable or session expired"
+                  : "Reel video requires INSTAGRAM_SESSION_ID or INSTAGRAM_COOKIES — Instagram no longer exposes reel MP4 URLs in public HTML"
               : "Media not found";
         return this.error(404, msg);
       }

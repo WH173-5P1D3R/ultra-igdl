@@ -141,6 +141,23 @@ function mediaFromApiItem(item: Record<string, unknown>): Media[] {
 
 const API_TIMEOUT_MS = 6_000;
 
+const SESSION_REJECTED_STATUS = new Set([302, 401, 403]);
+
+/** True when Instagram redirects/denies media/info (expired or invalid session). */
+export async function isSessionApiRejected(
+  sessionCookie: string,
+  referer: string,
+  mediaPk: string
+): Promise<boolean> {
+  const { statusCode } = await igApiGet(
+    `/api/v1/media/${mediaPk}/info/?media_id=${mediaPk}`,
+    sessionCookie,
+    referer,
+    API_HOSTS[0]
+  );
+  return SESSION_REJECTED_STATUS.has(statusCode);
+}
+
 async function igApiGet(
   path: string,
   sessionCookie: string,

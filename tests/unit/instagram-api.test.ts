@@ -18,6 +18,21 @@ describe("instagram-api", () => {
     );
   });
 
+  it("detects rejected session from media/info status", async () => {
+    vi.spyOn(requestModule, "request").mockResolvedValue({
+      statusCode: 302,
+      headers: {},
+      body: { text: async () => "" },
+    } as never);
+
+    const rejected = await instagramApi.isSessionApiRejected(
+      "sessionid=bad; csrftoken=bad; ds_user_id=1",
+      "https://www.instagram.com/reel/ABC/",
+      "12345"
+    );
+    expect(rejected).toBe(true);
+  });
+
   it("returns null when story API paths yield nothing (no live network)", async () => {
     vi.spyOn(requestModule, "request").mockResolvedValue({
       statusCode: 404,

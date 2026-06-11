@@ -119,6 +119,39 @@ describe("integration: ultraigdl", () => {
     expect(health.version).toBe(PACKAGE_VERSION);
   });
 
+  it("reports invalid session clearly for reels that need login", async () => {
+    vi.spyOn(requestModule, "request").mockImplementation(async (url: string | URL) => {
+      if (String(url).includes("/api/v1/media/")) {
+        return {
+          statusCode: 302,
+          headers: {},
+          body: { text: async () => "" },
+        } as never;
+      }
+      return {
+        statusCode: 200,
+        headers: {},
+        body: { text: async () => "<html><head></head><body></body></html>" },
+      } as never;
+    });
+
+    fetchSpy.mockResolvedValue({
+      body: "<html><head></head><body></body></html>",
+      statusCode: 200,
+      headers: {},
+    });
+
+    const ig = new ultraigdl({
+      cache: false,
+      cookies: "sessionid=expired; csrftoken=bad; ds_user_id=12345",
+    });
+    const result = await ig.download("https://www.instagram.com/reel/NEEDSESSION/");
+    expect(result.code).toBe(404);
+    if (result.code !== 200) {
+      expect(result.message).toContain("expired or invalid");
+    }
+  });
+
   it("downloads reel video via session media/info API", async () => {
     const thumbOnlyHtml = `<html><head>
 <meta property="og:image" content="https://cdninstagram.com/test/thumb.jpg" />

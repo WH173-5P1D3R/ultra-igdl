@@ -63,10 +63,10 @@ function parseArgs(argv: string[]): CliArgs {
 }
 
 function loadDotEnv(): void {
-  const candidates = [
-    resolve(process.cwd(), ".env"),
-    resolve(process.cwd(), "..", "ultra-igdl-live-test", ".env"),
-  ];
+  const candidates = [resolve(process.cwd(), ".env")];
+  if (process.env.ULTRA_IGDL_DEV === "1") {
+    candidates.push(resolve(process.cwd(), "..", "ultra-igdl-live-test", ".env"));
+  }
   for (const envPath of candidates) {
     if (!existsSync(envPath)) continue;
     for (const line of readFileSync(envPath, "utf8").split(/\r?\n/)) {
